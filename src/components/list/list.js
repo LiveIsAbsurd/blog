@@ -1,4 +1,5 @@
 import React from 'react';
+import { Pagination } from 'antd';
 
 import Article from '../article';
 
@@ -12,6 +13,7 @@ const List = () => {
       <Article />
       <Article />
       <Article />
+      <Pagination defaultCurrent={1} total={50} className={styles.pagination} />
     </div>
   );
 };
