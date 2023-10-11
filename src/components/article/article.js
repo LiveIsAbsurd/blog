@@ -1,26 +1,23 @@
 import React from 'react';
 import { Avatar } from 'antd';
 import { HeartOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+
+import dateForm from '../../function/dateForm';
+import tagRender from '../../function/tagRender';
 
 import styles from './article.module.sass';
 
 const Article = ({ item }) => {
-  const { title, description, favoritesCount, tagList, author } = item;
-  const tags = tagList.map((tag, i) => {
-    if (tag) {
-      return (
-        <span key={i} className={styles.tag}>
-          {tag}
-        </span>
-      );
-    }
-  });
+  const { slug, title, description, favoritesCount, tagList, author, createdAt } = item;
   return (
     <div className={styles.item}>
       <div className={styles.header}>
         <div>
           <div className={styles.article}>
-            <div className={styles.title}>{title}</div>
+            <Link to={`/article/${slug}`} className={styles.title}>
+              {title}
+            </Link>
             <HeartOutlined
               style={{
                 fontSize: '23px',
@@ -29,12 +26,12 @@ const Article = ({ item }) => {
             />
             <div className={styles.count}>{favoritesCount}</div>
           </div>
-          {tags}
+          {tagRender(tagList, styles)}
         </div>
         <div className={styles.info}>
           <div>
             <div className={styles.name}>{author.username}</div>
-            <div className={styles.date}>March 5, 2020</div>
+            <div className={styles.date}>{dateForm(createdAt)}</div>
           </div>
           <Avatar size={46} className={styles.avatar} src={author.image} />
         </div>

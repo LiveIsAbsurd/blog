@@ -8,8 +8,10 @@ import App from './components/app/';
 
 const inState = {
   posts: [],
-  articlesCount: 20,
+  pageCount: 0,
+  page: 1,
   loading: true,
+  article: null,
 };
 
 const composeEnhancers =
@@ -21,10 +23,14 @@ const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 const reducer = (state = inState, action) => {
   switch (action.type) {
-    case 'GET_POSTS':
-      return { ...state, posts: [...action.value.articles], articlesCount: action.value.articlesCount, loading: false };
-    case 'NEW_PAGE':
+    case 'GET_POSTS': {
+      const count = Math.floor(action.value.articlesCount / 20) * 10;
+      return { ...state, posts: [...action.value.articles], pageCount: count, page: action.page + 1, loading: false };
+    }
+    case 'LOADING':
       return { ...state, loading: true };
+    case 'GET_ARTICLE':
+      return { ...state, loading: false, article: action.value };
     default:
       return state;
   }

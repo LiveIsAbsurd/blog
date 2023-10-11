@@ -1,7 +1,11 @@
-export const getPostAction = (value) => {
-  return { type: 'GET_POSTS', value: value };
+export const getPostAction = (value, page) => {
+  return { type: 'GET_POSTS', value: value, page };
 };
 
-export const newPage = () => {
-  return { type: 'NEW_PAGE' };
+export const loading = () => {
+  return { type: 'LOADING' };
+};
+
+export const getArticleAction = (value) => {
+  return { type: 'GET_ARTICLE', value: value };
 };
