@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar } from 'antd';
 import { HeartOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
 
 import { getArticle } from '../../function/api';
 import dateForm from '../../function/dateForm';
@@ -22,9 +22,7 @@ const FullArticle = ({ slug }) => {
       <div className={styles.header}>
         <div>
           <div className={styles.article}>
-            <Link to={`/article/${slug}`} className={styles.title}>
-              {article.title}
-            </Link>
+            <span className={styles.title}>{article.title}</span>
             <HeartOutlined
               style={{
                 fontSize: '23px',
@@ -43,8 +41,8 @@ const FullArticle = ({ slug }) => {
           <Avatar size={46} className={styles.avatar} src={article.author.image} />
         </div>
       </div>
-      <div className={styles.text}>{article.description}</div>
-      <div>{article.body}</div>
+      <div className={styles.desc}>{article.description}</div>
+      <ReactMarkdown className={styles.text}>{article.body}</ReactMarkdown>
     </div>
   ) : null;
   return content;
