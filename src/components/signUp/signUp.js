@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import validator from 'validator';
 
 import styles from './signUp.module.sass';
 
@@ -15,7 +16,12 @@ const SignUp = () => {
     console.log(data);
   };
 
-  console.log(errors);
+  const validateEmail = (value) => {
+    if (!validator.isEmail(value)) {
+      return 'Некоректный email';
+    }
+    return true;
+  };
 
   return (
     <div className={styles.window}>
@@ -25,7 +31,11 @@ const SignUp = () => {
         <div className={styles.container}>
           <span className={styles.inputHead}>Username</span>
           <input
-            {...register('username', { required: 'Обязательное поле' })}
+            {...register('username', {
+              required: 'Обязательное поле',
+              minLength: { value: 3, message: 'Не менее 3 символов' },
+              maxLength: { value: 20, message: 'Не более 20 символов' },
+            })}
             placeholder="Username"
             type="text"
           ></input>
@@ -34,7 +44,15 @@ const SignUp = () => {
 
         <div className={styles.container}>
           <span className={styles.inputHead}>Email Adress</span>
-          <input placeholder="Email Adress" type="text" />
+          <input
+            {...register('email', {
+              required: 'Обязательное поле',
+              validate: validateEmail,
+            })}
+            placeholder="Email adress"
+            type="text"
+          ></input>
+          {errors.email && <span className={styles.errorMessage}>{errors.email.message}</span>}
         </div>
 
         <div className={styles.container}>
