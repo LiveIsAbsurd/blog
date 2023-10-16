@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import dateForm from '../../function/dateForm';
 import tagRender from '../../function/tagRender';
+import truncText from '../../function/truncText';
 
 import styles from './article.module.sass';
 
@@ -16,7 +17,7 @@ const Article = ({ item }) => {
         <div>
           <div className={styles.article}>
             <Link to={`/article/${slug}`} className={styles.title}>
-              {title}
+              {truncText(title, 40)}
             </Link>
             <HeartOutlined
               style={{
@@ -36,7 +37,7 @@ const Article = ({ item }) => {
           <Avatar size={46} className={styles.avatar} src={author.image} />
         </div>
       </div>
-      <div className={styles.text}>{description}</div>
+      <div className={styles.text}>{truncText(description, 200)}</div>
     </div>
   );
 };

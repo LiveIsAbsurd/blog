@@ -7,6 +7,9 @@ import { loading } from '../../function/actions';
 import Header from '../header';
 import articlesRender from '../articlesRender/articlesRender';
 import FullArticle from '../fullArticle';
+import SignUp from '../signUp';
+import SignIn from '../signIn';
+import Profile from '../Profile';
 
 import styles from './app.module.sass';
 
@@ -31,6 +34,9 @@ const App = () => {
                 return <FullArticle slug={match.params.slug} />;
               }}
             />
+            <Route path="/sign-up" component={SignUp} />
+            <Route path="/sign-in" component={SignIn} />
+            <Route path="/profile" component={Profile} />
             <Route path="/" component={articlesRender} />
           </Switch>
         </div>

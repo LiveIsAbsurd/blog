@@ -6,12 +6,16 @@ import styles from './header.module.sass';
 const Header = () => {
   return (
     <div className={styles.header}>
-      <Link to="/articles" className={styles.link}>
+      <Link to="/articles" className={styles.linkHead}>
         Realworld Blog
       </Link>
       <div>
-        <button>Sign In</button>
-        <button className={styles.log}>Log In</button>
+        <Link to="/sign-up" className={styles.link}>
+          Sign Up
+        </Link>
+        <Link to="/sign-in" className={`${styles.log} ${styles.link}`}>
+          Log In
+        </Link>
       </div>
     </div>
   );
