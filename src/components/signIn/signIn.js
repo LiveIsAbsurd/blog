@@ -1,32 +1,72 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-
-import { submit, change } from '../../function/form';
+import { useForm } from 'react-hook-form';
+import validator from 'validator';
 
 import styles from './signIn.module.sass';
 
 const SignIn = () => {
-  const [state, setState] = useState({
-    email: '',
-    password: '',
-  });
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  const validateEmail = (value) => {
+    if (!validator.isEmail(value)) {
+      return 'Некоректный email';
+    }
+    return true;
+  };
 
   return (
     <div className={styles.window}>
-      <form onSubmit={(e) => submit(state, e)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <span className={styles.header}>Sign In</span>
-        <span className={styles.inputHead}>Email Adress</span>
-        <input placeholder="Email Adress" type="text" onChange={(e) => change(state, setState, 'email', e)} />
-        <span className={styles.inputHead}>Password</span>
-        <input placeholder="Password" type="text" onChange={(e) => change(state, setState, 'password', e)} />
-        <input className={styles.button} type="submit" value="Login" />
-        <div>
-          Already have an account?{' '}
-          <Link to="/sign-up" className={styles.link}>
-            Sign Up.
-          </Link>
+
+        <div className={styles.container}>
+          <span className={styles.inputHead}>Email Adress</span>
+          <input
+            {...register('email', {
+              required: 'Обязательное поле',
+              validate: validateEmail,
+            })}
+            placeholder="Email adress"
+            type="text"
+            style={errors.email ? { borderColor: 'red' } : null}
+          ></input>
+          {errors.email && <span className={styles.errorMessage}>{errors.email.message}</span>}
         </div>
+
+        <div className={styles.container}>
+          <span className={styles.inputHead}>Password</span>
+          <input
+            {...register('password', {
+              required: 'Обязательное поле',
+            })}
+            placeholder="Password"
+            type="password"
+            style={errors.password ? { borderColor: 'red' } : null}
+          ></input>
+          {errors.password && <span className={styles.errorMessage}>{errors.password.message}</span>}
+        </div>
+        <input
+          style={Object.keys(errors).length !== 0 ? { opacity: '0.5', cursor: 'unset' } : null}
+          className={styles.button}
+          type="submit"
+          value="Create"
+        />
       </form>
+      <div className={styles.have}>
+        Already have an account?{' '}
+        <Link to="/sign-up" className={styles.link}>
+          Sign Up.
+        </Link>
+      </div>
     </div>
   );
 };

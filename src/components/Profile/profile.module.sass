@@ -1,6 +1,6 @@
 .window
     width: 380px
-    height: 500px
+    height: min-content
     background-color: white
     box-shadow: 0px 6px 20px 5px rgba(0, 0, 0, 0.1)
 
@@ -13,6 +13,9 @@
     font-weight: 500
     line-height: 28px
     word-wrap: break-word
+
+    .container
+        margin-bottom: 12px
 
     .header
         display: block
@@ -35,8 +38,6 @@
 
         height: 40px
         width: 100%
-
-        margin-bottom: 12px
     
     button
         border: none
@@ -55,14 +56,10 @@
         font-weight: 400
         line-height: 24px
 
-    div
-        text-align: center
-
-        color: #8C8C8C
-        font-size: 12px
-        font-weight: 400
-        line-height: 20px
-
-        .link
-            color: #1890FF
-            text-decoration: none
+.errorMessage
+    display: block
+    text-align: left
+    color: #F5222D
+    font-size: 14px
+    font-weight: 400
+    line-height: 22px

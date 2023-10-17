@@ -1,6 +1,6 @@
 .window
     width: 380px
-    height: 370px
+    height: min-content
     background-color: white
     box-shadow: 0px 6px 20px 5px rgba(0, 0, 0, 0.1)
 
@@ -20,23 +20,25 @@
 
         margin-bottom: 20px
 
-    .inputHead
-        display: block
-
-        font-size: 14px
-        font-weight: 400
-        line-height: 22px
-    
-    input
-        border: 1px #D9D9D9 solid
-        border-radius: 4px
-
-        padding: 8px 12px
-
-        height: 40px
-        width: 100%
-
+    .container
         margin-bottom: 12px
+
+        .inputHead
+            display: block
+            text-align: left
+
+            font-size: 14px
+            font-weight: 400
+            line-height: 22px
+        
+        input
+            border: 1px #D9D9D9 solid
+            border-radius: 4px
+
+            padding: 8px 12px
+
+            height: 40px
+            width: 100%
     
     .button
         border: none
@@ -55,7 +57,7 @@
         font-weight: 400
         line-height: 24px
 
-    div
+    .have
         text-align: center
 
         color: #8C8C8C
@@ -66,3 +68,11 @@
         .link
             color: #1890FF
             text-decoration: none
+
+.errorMessage
+    display: block
+    text-align: left
+    color: #F5222D
+    font-size: 14px
+    font-weight: 400
+    line-height: 22px
