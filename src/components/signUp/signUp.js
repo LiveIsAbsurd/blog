@@ -1,33 +1,67 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useForm, useWatch } from 'react-hook-form';
-import validator from 'validator';
+import { useDispatch } from 'react-redux';
+
+import { authentication } from '../../function/actions';
 
 import styles from './signUp.module.sass';
 
 const SignUp = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const {
     handleSubmit,
     register,
     formState: { errors },
     control,
+    setError,
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
-  };
+    const userData = {
+      user: {
+        username: data.username,
+        email: data.email.toLowerCase(),
+        password: data.password,
+      },
+    };
+    fetch('https://blog.kata.academy/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.errors) {
+          console.log(data.errors);
+          if (data.errors.username) {
+            setError('username', {
+              type: 'taken',
+              message: 'Уже используется',
+            });
+          }
 
-  const validateEmail = (value) => {
-    if (!validator.isEmail(value)) {
-      return 'Некоректный email';
-    }
-    return true;
+          if (data.errors.email) {
+            setError('email', {
+              type: 'taken',
+              message: 'Уже используется',
+            });
+          }
+        } else {
+          dispatch(authentication(data.user));
+          history.push('/article');
+        }
+      });
   };
 
   const password = useWatch({
     control,
     name: 'password',
   });
+
   return (
     <div className={styles.window}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -53,7 +87,10 @@ const SignUp = () => {
           <input
             {...register('email', {
               required: 'Обязательное поле',
-              validate: validateEmail,
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: 'Некоректный email',
+              },
             })}
             placeholder="Email adress"
             type="text"

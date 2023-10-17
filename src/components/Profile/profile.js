@@ -1,6 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import validator from 'validator';
 
 import styles from './profile.module.sass';
 
@@ -13,13 +12,6 @@ const Profile = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-  };
-
-  const validateEmail = (value) => {
-    if (!validator.isEmail(value)) {
-      return 'Некоректный email';
-    }
-    return true;
   };
 
   return (
@@ -47,7 +39,10 @@ const Profile = () => {
           <input
             {...register('email', {
               required: 'Обязательное поле',
-              validate: validateEmail,
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: 'Некоректный email',
+              },
             })}
             placeholder="Email adress"
             type="text"
@@ -60,7 +55,6 @@ const Profile = () => {
           <span className={styles.inputHead}>New Password</span>
           <input
             {...register('password', {
-              required: 'Обязательное поле',
               minLength: { value: 6, message: 'Не менее 6 символов' },
               maxLength: { value: 40, message: 'Не более 40 символов' },
             })}
@@ -73,7 +67,18 @@ const Profile = () => {
 
         <div className={styles.container}>
           <span className={styles.inputHead}>{'Avatar Image (url)'}</span>
-          <input placeholder="Avatar image" type="text" />
+          <input
+            {...register('url', {
+              pattern: {
+                value: /^https?:\/\/[\w.-]+\.[a-zA-Z]{2,}$/,
+                message: 'Некоректный url',
+              },
+            })}
+            placeholder="Avatar image"
+            type="text"
+            style={errors.url ? { borderColor: 'red' } : null}
+          ></input>
+          {errors.url && <span className={styles.errorMessage}>{errors.url.message}</span>}
         </div>
         <button>Save</button>
       </form>

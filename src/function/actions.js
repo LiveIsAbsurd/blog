@@ -9,3 +9,7 @@ export const loading = () => {
 export const getArticleAction = (value) => {
   return { type: 'GET_ARTICLE', value: value };
 };
+
+export const authentication = (value) => {
+  return { type: 'AUTH', value: value };
+};

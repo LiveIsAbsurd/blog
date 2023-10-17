@@ -12,8 +12,10 @@ const inState = {
   page: 1,
   loading: true,
   article: null,
+  token: null,
+  username: null,
 };
-
+//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MmVjYjhhZmYzY2M4MWIwMGRhYzM5MyIsInVzZXJuYW1lIjoidGVzdHVzZXJycnIiLCJleHAiOjE3MDI3NDk1NzgsImlhdCI6MTY5NzU2NTU3OH0.eRjA-HY9UQ9z0vaElbrUSTWYaTdF3ED-jut8Iq4vfBE"
 const composeEnhancers =
   typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
@@ -31,6 +33,10 @@ const reducer = (state = inState, action) => {
       return { ...state, loading: true };
     case 'GET_ARTICLE':
       return { ...state, loading: false, article: action.value };
+    case 'AUTH': {
+      console.log(action.value);
+      return { ...state, token: action.value.token, username: action.value.username };
+    }
     default:
       return state;
   }
