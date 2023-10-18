@@ -1,34 +1,37 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { onUpdateProfile } from '../../function/api';
 
 import styles from './profile.module.sass';
 
 const Profile = () => {
+  const dispatch = useDispatch();
+  const username = useSelector((state) => state.username);
+  const email = useSelector((state) => state.email);
+  const token = useSelector((state) => state.token);
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
-
   return (
     <div className={styles.window}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit((data) => dispatch(onUpdateProfile(data, token)))}>
         <span className={styles.header}>Edit Profile</span>
 
         <div className={styles.container}>
           <span className={styles.inputHead}>Username</span>
           <input
             {...register('username', {
-              required: 'Обязательное поле',
               minLength: { value: 3, message: 'Не менее 3 символов' },
               maxLength: { value: 20, message: 'Не более 20 символов' },
             })}
             placeholder="Username"
             type="text"
+            defaultValue={username}
             style={errors.username ? { borderColor: 'red' } : null}
           ></input>
           {errors.username && <span className={styles.errorMessage}>{errors.username.message}</span>}
@@ -38,7 +41,6 @@ const Profile = () => {
           <span className={styles.inputHead}>Email Adress</span>
           <input
             {...register('email', {
-              required: 'Обязательное поле',
               pattern: {
                 value: /\S+@\S+\.\S+/,
                 message: 'Некоректный email',
@@ -46,6 +48,7 @@ const Profile = () => {
             })}
             placeholder="Email adress"
             type="text"
+            defaultValue={email}
             style={errors.email ? { borderColor: 'red' } : null}
           ></input>
           {errors.email && <span className={styles.errorMessage}>{errors.email.message}</span>}
@@ -68,19 +71,19 @@ const Profile = () => {
         <div className={styles.container}>
           <span className={styles.inputHead}>{'Avatar Image (url)'}</span>
           <input
-            {...register('url', {
+            {...register('image', {
               pattern: {
-                value: /^https?:\/\/[\w.-]+\.[a-zA-Z]{2,}$/,
+                value: /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,6}\.?)(\/[\w.-]*)*\/?$/i,
                 message: 'Некоректный url',
               },
             })}
             placeholder="Avatar image"
             type="text"
-            style={errors.url ? { borderColor: 'red' } : null}
+            style={errors.image ? { borderColor: 'red' } : null}
           ></input>
-          {errors.url && <span className={styles.errorMessage}>{errors.url.message}</span>}
+          {errors.image && <span className={styles.errorMessage}>{errors.image.message}</span>}
         </div>
-        <button>Save</button>
+        <input type="submit" value="save" className={styles.button} />
       </form>
     </div>
   );

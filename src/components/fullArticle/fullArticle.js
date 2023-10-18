@@ -7,6 +7,7 @@ import { HeartOutlined } from '@ant-design/icons';
 import { getArticle } from '../../function/api';
 import dateForm from '../../function/dateForm';
 import tagRender from '../../function/tagRender';
+import truncText from '../../function/truncText';
 
 import styles from './fullArticle.module.sass';
 
@@ -22,7 +23,7 @@ const FullArticle = ({ slug }) => {
       <div className={styles.header}>
         <div>
           <div className={styles.article}>
-            <span className={styles.title}>{article.title}</span>
+            <span className={styles.title}>{truncText(article.title, 40)}</span>
             <HeartOutlined
               style={{
                 fontSize: '23px',

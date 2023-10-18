@@ -60,7 +60,7 @@ const SignIn = () => {
           style={Object.keys(errors).length !== 0 ? { opacity: '0.5', cursor: 'unset' } : null}
           className={styles.button}
           type="submit"
-          value="Create"
+          value="Log in"
         />
       </form>
       <div className={styles.have}>

@@ -91,3 +91,27 @@ export const onAuth = (data, setError, history) => {
       });
   };
 };
+
+export const onUpdateProfile = (data, token) => {
+  console.log(token);
+  return () => {
+    const userData = {
+      user: {
+        username: data.username,
+        email: data.email.toLowerCase(),
+        password: data.password ? data.password : null,
+        image: data.image ? data.image : null,
+      },
+    };
+    fetch('https://blog.kata.academy/api/user', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${token}`,
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+  };
+};
