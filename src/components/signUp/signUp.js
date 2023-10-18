@@ -3,13 +3,13 @@ import { Link, useHistory } from 'react-router-dom';
 import { useForm, useWatch } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
-import { authentication } from '../../function/actions';
+import { onRegister } from '../../function/api';
 
 import styles from './signUp.module.sass';
 
 const SignUp = () => {
-  const dispatch = useDispatch();
   const history = useHistory();
+  const dispatch = useDispatch();
   const {
     handleSubmit,
     register,
@@ -18,45 +18,6 @@ const SignUp = () => {
     setError,
   } = useForm();
 
-  const onSubmit = (data) => {
-    const userData = {
-      user: {
-        username: data.username,
-        email: data.email.toLowerCase(),
-        password: data.password,
-      },
-    };
-    fetch('https://blog.kata.academy/api/users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.errors) {
-          console.log(data.errors);
-          if (data.errors.username) {
-            setError('username', {
-              type: 'taken',
-              message: 'Уже используется',
-            });
-          }
-
-          if (data.errors.email) {
-            setError('email', {
-              type: 'taken',
-              message: 'Уже используется',
-            });
-          }
-        } else {
-          dispatch(authentication(data.user));
-          history.push('/article');
-        }
-      });
-  };
-
   const password = useWatch({
     control,
     name: 'password',
@@ -64,7 +25,7 @@ const SignUp = () => {
 
   return (
     <div className={styles.window}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit((data) => dispatch(onRegister(data, setError, history)))}>
         <span className={styles.header}>Create New Account</span>
 
         <div className={styles.container}>

@@ -19,28 +19,75 @@ export const getArticle = (slug) => {
   };
 };
 
-export const createAccount = (data) => {
+export const onRegister = (data, setError, history) => {
   return (dispatch) => {
+    const userData = {
+      user: {
+        username: data.username,
+        email: data.email.toLowerCase(),
+        password: data.password,
+      },
+    };
     fetch('https://blog.kata.academy/api/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(userData),
     })
-      .then(async (response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          let error = await response.json();
-          throw new Error(error);
-        }
-      })
+      .then((response) => response.json())
       .then((data) => {
-        dispatch(authentication(data.user));
-      })
-      .catch((err) => {
-        console.log(err);
+        if (data.errors) {
+          console.log(data.errors);
+          if (data.errors.username) {
+            setError('username', {
+              type: 'taken',
+              message: 'Уже используется',
+            });
+          }
+
+          if (data.errors.email) {
+            setError('email', {
+              type: 'taken',
+              message: 'Уже используется',
+            });
+          }
+        } else {
+          dispatch(authentication(data.user));
+          history.push('/article');
+        }
+      });
+  };
+};
+
+export const onAuth = (data, setError, history) => {
+  return (dispatch) => {
+    const userData = {
+      user: {
+        email: data.email.toLowerCase(),
+        password: data.password,
+      },
+    };
+    fetch('https://blog.kata.academy/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.errors) {
+          console.log(data.errors);
+
+          setError('password', {
+            type: 'taken',
+            message: 'Не верные данные',
+          });
+        } else {
+          dispatch(authentication(data.user));
+          history.push('/article');
+        }
       });
   };
 };

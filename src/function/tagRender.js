@@ -2,7 +2,7 @@ import truncText from './truncText';
 
 const tagRender = (tagList, styles) => {
   const tags = tagList.map((tag, i) => {
-    if (tag) {
+    if (tag && tag.trim()) {
       if (i === 5) {
         return '...';
       } else if (i > 5) {

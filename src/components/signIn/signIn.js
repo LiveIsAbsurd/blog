@@ -1,20 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
+import { useDispatch } from 'react-redux';
+
+import { onAuth } from '../../function/api';
 
 import styles from './signIn.module.sass';
 
 const SignIn = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
   const {
     handleSubmit,
     register,
     formState: { errors },
+    setError,
   } = useForm();
-
-  const onSubmit = (data) => {
-    console.log(data);
-  };
 
   const validateEmail = (value) => {
     if (!validator.isEmail(value)) {
@@ -25,7 +27,7 @@ const SignIn = () => {
 
   return (
     <div className={styles.window}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit((data) => dispatch(onAuth(data, setError, history)))}>
         <span className={styles.header}>Sign In</span>
 
         <div className={styles.container}>

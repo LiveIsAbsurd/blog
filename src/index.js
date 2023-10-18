@@ -14,6 +14,8 @@ const inState = {
   article: null,
   token: null,
   username: null,
+  email: null,
+  avatar: null,
 };
 //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MmVjYjhhZmYzY2M4MWIwMGRhYzM5MyIsInVzZXJuYW1lIjoidGVzdHVzZXJycnIiLCJleHAiOjE3MDI3NDk1NzgsImlhdCI6MTY5NzU2NTU3OH0.eRjA-HY9UQ9z0vaElbrUSTWYaTdF3ED-jut8Iq4vfBE"
 const composeEnhancers =
