@@ -1,5 +1,5 @@
-import React from 'react';
-import { Pagination } from 'antd';
+import React, { useEffect } from 'react';
+import { Pagination, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getPosts } from '../../function/api';
@@ -13,6 +13,8 @@ const articlesRender = () => {
   const posts = useSelector((state) => state.posts);
   const loading = useSelector((state) => state.loading);
   const dispatch = useDispatch();
+
+  useEffect(() => window.scrollTo(0, 0));
 
   const articles = posts.map((el, i) => {
     return <Article key={i} item={el} />;
@@ -29,7 +31,9 @@ const articlesRender = () => {
           className={styles.pagination}
           showSizeChanger={false}
         />
-      ) : null}
+      ) : (
+        <Spin />
+      )}
     </div>
   );
 };

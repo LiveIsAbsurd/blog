@@ -11,13 +11,14 @@ const inState = {
   pageCount: 0,
   page: 1,
   loading: true,
+  error: false,
   article: null,
   token: null,
   username: null,
   email: null,
   image: null,
 };
-//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MmVjYjhhZmYzY2M4MWIwMGRhYzM5MyIsInVzZXJuYW1lIjoidGVzdHVzZXJycnIiLCJleHAiOjE3MDI3NDk1NzgsImlhdCI6MTY5NzU2NTU3OH0.eRjA-HY9UQ9z0vaElbrUSTWYaTdF3ED-jut8Iq4vfBE"
+
 const composeEnhancers =
   typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
@@ -33,16 +34,23 @@ const reducer = (state = inState, action) => {
     }
     case 'LOADING':
       return { ...state, loading: true };
+    case 'ERROR':
+      return { ...state, loading: false, error: true };
     case 'GET_ARTICLE':
       return { ...state, loading: false, article: action.value };
     case 'AUTH': {
       console.log(action.value);
       const image = action.value.image ? action.value.image : null;
       const email = action.value.email ? action.value.email : null;
-      return { ...state, token: action.value.token, username: action.value.username, image: image, email: email };
+      const username = action.value.username ? action.value.username : null;
+      localStorage.setItem('token', action.value.token);
+      return { ...state, token: action.value.token, username: username, image: image, email: email };
     }
     case 'LOG_OUT':
+      localStorage.clear();
       return { ...state, token: null, username: null, image: null, email: null };
+    case 'CLEAR':
+      return { ...state, article: null };
     default:
       return state;
   }

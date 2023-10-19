@@ -17,3 +17,7 @@ export const authentication = (value) => {
 export const logOut = () => {
   return { type: 'LOG_OUT' };
 };
+
+export const clearArticle = () => {
+  return { type: 'CLEAR' };
+};

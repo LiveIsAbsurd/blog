@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Avatar } from 'antd';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { logOut } from '../../function/actions';
+import { findUser } from '../../function/api';
+import { logOut, clearArticle } from '../../function/actions';
 
 import styles from './header.module.sass';
 
@@ -12,10 +13,16 @@ const Header = () => {
   const history = useHistory();
   const username = useSelector((state) => state.username);
   const image = useSelector((state) => state.image);
-  console.log(image);
+  const token = useSelector((state) => state.token);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(findUser(token));
+    }
+  }, [token]);
   const nonAuth = (
     <React.Fragment>
-      <Link to="/articles" className={styles.linkHead}>
+      <Link to="/articles" className={styles.linkHead} onClick={() => dispatch(clearArticle())}>
         Realworld Blog
       </Link>
       <div>
@@ -30,7 +37,7 @@ const Header = () => {
   );
   const auth = (
     <React.Fragment>
-      <Link to="/articles" className={styles.linkHead}>
+      <Link to="/articles" className={styles.linkHead} onClick={() => dispatch(clearArticle())}>
         Realworld Blog
       </Link>
       <div>

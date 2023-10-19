@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from 'react-redux';
-import { Avatar } from 'antd';
+import { Avatar, Spin } from 'antd';
 import { HeartOutlined } from '@ant-design/icons';
 
 import { getArticle } from '../../function/api';
@@ -13,12 +13,13 @@ import styles from './fullArticle.module.sass';
 
 const FullArticle = ({ slug }) => {
   const dispatch = useDispatch();
+  const article = useSelector((state) => state.article);
   useEffect(() => {
     dispatch(getArticle(slug));
+    window.scrollTo(0, 0);
   }, []);
-  const article = useSelector((state) => state.article);
-  const loading = useSelector((state) => state.loading);
-  let content = !loading ? (
+
+  let content = article ? (
     <div className={styles.item}>
       <div className={styles.header}>
         <div>
@@ -45,7 +46,11 @@ const FullArticle = ({ slug }) => {
       <div className={styles.desc}>{article.description}</div>
       <ReactMarkdown className={styles.text}>{article.body}</ReactMarkdown>
     </div>
-  ) : null;
+  ) : (
+    <div className={styles.wrapper}>
+      <Spin />
+    </div>
+  );
   return content;
 };
 

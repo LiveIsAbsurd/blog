@@ -142,3 +142,18 @@ export const onUpdateProfile = (data, token, setError, history) => {
       });
   };
 };
+
+export const findUser = (token) => {
+  return (dispatch) => {
+    fetch('https://blog.kata.academy/api/user', {
+      method: 'GET',
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch(authentication(data.user));
+      });
+  };
+};

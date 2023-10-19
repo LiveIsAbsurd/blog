@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import { getPosts } from '../../function/api';
-import { loading } from '../../function/actions';
+import { authentication } from '../../function/actions';
 import Header from '../header';
 import articlesRender from '../articlesRender/articlesRender';
 import FullArticle from '../fullArticle';
@@ -18,6 +18,9 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getPosts(0));
+    if (localStorage.getItem('token') !== null) {
+      dispatch(authentication({ token: localStorage.getItem('token') }));
+    }
   }, []);
 
   return (
@@ -30,7 +33,6 @@ const App = () => {
             <Route
               path="/article/:slug"
               render={({ match }) => {
-                dispatch(loading());
                 return <FullArticle slug={match.params.slug} />;
               }}
             />
