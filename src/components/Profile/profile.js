@@ -1,12 +1,14 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { onUpdateProfile } from '../../function/api';
 
 import styles from './profile.module.sass';
 
 const Profile = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const username = useSelector((state) => state.username);
   const email = useSelector((state) => state.email);
@@ -15,11 +17,12 @@ const Profile = () => {
     handleSubmit,
     register,
     formState: { errors },
+    setError,
   } = useForm();
 
   return (
     <div className={styles.window}>
-      <form onSubmit={handleSubmit((data) => dispatch(onUpdateProfile(data, token)))}>
+      <form onSubmit={handleSubmit((data) => dispatch(onUpdateProfile(data, token, setError, history)))}>
         <span className={styles.header}>Edit Profile</span>
 
         <div className={styles.container}>

@@ -41,6 +41,8 @@ const reducer = (state = inState, action) => {
       const email = action.value.email ? action.value.email : null;
       return { ...state, token: action.value.token, username: action.value.username, image: image, email: email };
     }
+    case 'LOG_OUT':
+      return { ...state, token: null, username: null, image: null, email: null };
     default:
       return state;
   }

@@ -13,3 +13,7 @@ export const getArticleAction = (value) => {
 export const authentication = (value) => {
   return { type: 'AUTH', value: value };
 };
+
+export const logOut = () => {
+  return { type: 'LOG_OUT' };
+};

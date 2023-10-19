@@ -1,11 +1,15 @@
 import React from 'react';
 import { Avatar } from 'antd';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { logOut } from '../../function/actions';
 
 import styles from './header.module.sass';
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const username = useSelector((state) => state.username);
   const image = useSelector((state) => state.image);
   console.log(image);
@@ -34,9 +38,16 @@ const Header = () => {
           <span>{username}</span>
           <Avatar size={46} className={styles.avatar} src={image} />
         </Link>
-        <Link to="/sign-in" className={`${styles.log} ${styles.link}`}>
+        <button
+          to="/sign-in"
+          className={`${styles.logOut} ${styles.link}`}
+          onClick={() => {
+            dispatch(logOut());
+            history.push('/sign-in');
+          }}
+        >
           Log out
-        </Link>
+        </button>
       </div>
     </React.Fragment>
   );

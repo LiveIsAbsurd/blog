@@ -92,9 +92,9 @@ export const onAuth = (data, setError, history) => {
   };
 };
 
-export const onUpdateProfile = (data, token) => {
+export const onUpdateProfile = (data, token, setError, history) => {
   console.log(token);
-  return () => {
+  return (dispatch) => {
     const userData = {
       user: {
         username: data.username,
@@ -103,6 +103,12 @@ export const onUpdateProfile = (data, token) => {
         image: data.image ? data.image : null,
       },
     };
+    if (!data.password) {
+      delete userData.user.password;
+    }
+    if (!data.image) {
+      delete userData.user.image;
+    }
     fetch('https://blog.kata.academy/api/user', {
       method: 'PUT',
       headers: {
@@ -112,6 +118,27 @@ export const onUpdateProfile = (data, token) => {
       body: JSON.stringify(userData),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => {
+        if (data.errors) {
+          console.log(data.errors);
+
+          if (data.errors.username) {
+            setError('username', {
+              type: 'taken',
+              message: 'Уже используется',
+            });
+          }
+
+          if (data.errors.email) {
+            setError('email', {
+              type: 'taken',
+              message: 'Уже используется',
+            });
+          }
+        } else {
+          dispatch(authentication(data.user));
+          history.push('/article');
+        }
+      });
   };
 };
