@@ -86,7 +86,7 @@ export const onAuth = (data, setError, history) => {
           });
         } else {
           dispatch(authentication(data.user));
-          history.push('/article');
+          history.push('/articles');
         }
       });
   };
@@ -137,7 +137,7 @@ export const onUpdateProfile = (data, token, setError, history) => {
           }
         } else {
           dispatch(authentication(data.user));
-          history.push('/article');
+          history.push('/articles');
         }
       });
   };
@@ -154,6 +154,25 @@ export const findUser = (token) => {
       .then((response) => response.json())
       .then((data) => {
         dispatch(authentication(data.user));
+      });
+  };
+};
+
+export const createArticle = (data, token, history) => {
+  return (dispatch) => {
+    console.log(data, token);
+    fetch('https://blog.kata.academy/api/articles', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        history.push('/articles');
+        dispatch(getPosts(0));
       });
   };
 };

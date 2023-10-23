@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getPosts } from '../../function/api';
 import { authentication } from '../../function/actions';
@@ -10,11 +10,14 @@ import FullArticle from '../fullArticle';
 import SignUp from '../signUp';
 import SignIn from '../signIn';
 import Profile from '../Profile';
+import EditArticle from '../editArticle';
+import PrivateRouter from '../privateRouter';
 
 import styles from './app.module.sass';
 
 const App = () => {
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.token);
 
   useEffect(() => {
     dispatch(getPosts(0));
@@ -29,6 +32,7 @@ const App = () => {
         <Header />
         <div className={styles.main}>
           <Switch>
+            <Route exact path="/" component={articlesRender} />
             <Route exact path="/articles" component={articlesRender} />
             <Route
               path="/article/:slug"
@@ -39,7 +43,8 @@ const App = () => {
             <Route path="/sign-up" component={SignUp} />
             <Route path="/sign-in" component={SignIn} />
             <Route path="/profile" component={Profile} />
-            <Route path="/" component={articlesRender} />
+            <PrivateRouter path="/new-article" component={EditArticle} token={token} />
+            <Redirect to="/articles" />
           </Switch>
         </div>
       </div>

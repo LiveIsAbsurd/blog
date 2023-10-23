@@ -41,6 +41,9 @@ const Header = () => {
         Realworld Blog
       </Link>
       <div>
+        <Link to="/new-article" className={styles.newArticle}>
+          Create Article
+        </Link>
         <Link to="/profile" className={styles.link}>
           <span>{username}</span>
           <Avatar size={46} className={styles.avatar} src={image} />
