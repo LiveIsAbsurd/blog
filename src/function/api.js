@@ -1,31 +1,41 @@
-import { getPostAction, loading, getArticleAction, authentication } from './actions';
+import { getPostAction, loading, getArticleAction, authentication, errorAction } from './actions';
 
 export const getPosts = (offset, token, reload) => {
   return async (dispatch) => {
     if (reload) {
       dispatch(loading());
     }
-    const response = await fetch(`https://blog.kata.academy/api/articles?offset=${offset}`, {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    });
-    const data = await response.json();
-    const page = offset / 20;
-    dispatch(getPostAction(data, page));
+    try {
+      const response = await fetch(`https://blog.kata.academy/api/articles?offset=${offset}`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      const data = await response.json();
+      const page = offset / 20;
+      if (response.ok) {
+        dispatch(getPostAction(data, page));
+      }
+    } catch (err) {
+      dispatch(errorAction());
+    }
   };
 };
 
-export const getArticle = (slug, token) => {
+export const getArticle = (slug, token, history) => {
   return async (dispatch) => {
     dispatch(loading());
-    const response = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    });
-    const data = await response.json();
-    dispatch(getArticleAction(data.article));
+    try {
+      const response = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      const data = await response.json();
+      dispatch(getArticleAction(data.article));
+    } catch (err) {
+      history.push('/error');
+    }
   };
 };
 
@@ -48,7 +58,6 @@ export const onRegister = (data, setError, history) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.errors) {
-          console.log(data.errors);
           if (data.errors.username) {
             setError('username', {
               type: 'taken',
@@ -66,6 +75,9 @@ export const onRegister = (data, setError, history) => {
           dispatch(authentication(data.user));
           history.push('/article');
         }
+      })
+      .catch(() => {
+        history.push('/error');
       });
   };
 };
@@ -88,8 +100,6 @@ export const onAuth = (data, setError, history) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.errors) {
-          console.log(data.errors);
-
           setError('password', {
             type: 'taken',
             message: 'Не верные данные',
@@ -98,6 +108,9 @@ export const onAuth = (data, setError, history) => {
           dispatch(authentication(data.user));
           history.push('/articles');
         }
+      })
+      .catch(() => {
+        history.push('/error');
       });
   };
 };
@@ -129,8 +142,6 @@ export const onUpdateProfile = (data, token, setError, history) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.errors) {
-          console.log(data.errors);
-
           if (data.errors.username) {
             setError('username', {
               type: 'taken',
@@ -148,6 +159,9 @@ export const onUpdateProfile = (data, token, setError, history) => {
           dispatch(authentication(data.user));
           history.push('/articles');
         }
+      })
+      .catch(() => {
+        history.push('/error');
       });
   };
 };
@@ -163,6 +177,9 @@ export const findUser = (token) => {
       .then((response) => response.json())
       .then((data) => {
         dispatch(authentication(data.user));
+      })
+      .catch(() => {
+        history.push('/error');
       });
   };
 };
@@ -182,6 +199,9 @@ export const createArticle = (data, token, history, slug) => {
       .then(() => {
         history.push('/articles');
         dispatch(getPosts(0, token, true));
+      })
+      .catch(() => {
+        history.push('/error');
       });
   };
 };
@@ -193,14 +213,18 @@ export const deleteArticle = (slug, token, history) => {
       headers: {
         Authorization: `Token ${token}`,
       },
-    }).then(() => {
-      history.push('/articles');
-      dispatch(getPosts(0, token));
-    });
+    })
+      .then(() => {
+        history.push('/articles');
+        dispatch(getPosts(0, token));
+      })
+      .catch(() => {
+        history.push('/error');
+      });
   };
 };
 
-export const favorite = (slug, token, favorited, page = 1, full = null) => {
+export const favorite = (slug, token, favorited, page = 1, full = null, history) => {
   return (dispatch) => {
     if (!token) {
       return;
@@ -219,6 +243,9 @@ export const favorite = (slug, token, favorited, page = 1, full = null) => {
         } else {
           dispatch(getArticle(slug, token));
         }
+      })
+      .catch(() => {
+        history.push('/error');
       });
   };
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar } from 'antd';
 import { HeartFilled, HeartOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import dateForm from '../../function/dateForm';
@@ -12,6 +12,7 @@ import { favorite } from '../../function/api';
 import styles from './article.module.sass';
 
 const Article = ({ item }) => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const page = useSelector((state) => state.page);
@@ -24,7 +25,10 @@ const Article = ({ item }) => {
             <Link to={`/article/${slug}`} className={styles.title}>
               {truncText(title, 40)}
             </Link>
-            <button className={styles.like} onClick={() => dispatch(favorite(slug, token, favorited, (page - 1) * 20))}>
+            <button
+              className={styles.like}
+              onClick={() => dispatch(favorite(slug, token, favorited, (page - 1) * 20, false, history))}
+            >
               {favorited ? (
                 <HeartFilled
                   style={{

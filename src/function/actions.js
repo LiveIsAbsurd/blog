@@ -21,3 +21,7 @@ export const logOut = () => {
 export const clearArticle = () => {
   return { type: 'CLEAR' };
 };
+
+export const errorAction = () => {
+  return { type: 'ERROR' };
+};

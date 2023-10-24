@@ -10,7 +10,7 @@ const tagRender = (tagList, styles) => {
       } else {
         return (
           <span key={i} className={styles.tag}>
-            {truncText(tag, 5)}
+            {truncText(tag, 10)}
           </span>
         );
       }

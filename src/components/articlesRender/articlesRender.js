@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getPosts } from '../../function/api';
 import { clearArticle } from '../../function/actions';
 import Article from '../article';
+import Error from '../error';
 
 import styles from './articlesRender.module.sass';
 
@@ -14,6 +15,7 @@ const ArticlesRender = () => {
   const posts = useSelector((state) => state.posts);
   const loading = useSelector((state) => state.loading);
   const token = useSelector((state) => state.token);
+  const error = useSelector((state) => state.error);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,8 +29,8 @@ const ArticlesRender = () => {
 
   return (
     <div className={styles.wrapper}>
-      {!loading ? articles : null}
-      {!loading ? (
+      {!loading && !error ? articles : null}
+      {!loading && !error ? (
         <Pagination
           current={page}
           onChange={(count) => dispatch(getPosts(20 * (count - 1), token))}
@@ -36,9 +38,9 @@ const ArticlesRender = () => {
           className={styles.pagination}
           showSizeChanger={false}
         />
-      ) : (
-        <Spin />
-      )}
+      ) : null}
+      {loading && !error ? <Spin /> : null}
+      {error && !loading ? <Error /> : null}
     </div>
   );
 };

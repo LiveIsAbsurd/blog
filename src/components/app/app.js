@@ -12,6 +12,7 @@ import SignIn from '../signIn';
 import Profile from '../Profile';
 import EditArticle from '../editArticle';
 import PrivateRouter from '../privateRouter';
+import Error from '../error';
 
 import styles from './app.module.sass';
 
@@ -65,6 +66,7 @@ const App = () => {
                 return <EditArticle slug={match.params.slug} />;
               }}
             />
+            <Route path="/error" component={Error} />
             <Redirect to="/articles" />
           </Switch>
         </div>

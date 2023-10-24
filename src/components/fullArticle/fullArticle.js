@@ -19,7 +19,7 @@ const FullArticle = ({ slug }) => {
   const username = useSelector((state) => state.username);
   const token = useSelector((state) => state.token);
   useEffect(() => {
-    dispatch(getArticle(slug, token));
+    dispatch(getArticle(slug, token, history));
     window.scrollTo(0, 0);
   }, []);
 
@@ -29,7 +29,10 @@ const FullArticle = ({ slug }) => {
         <div>
           <div className={styles.article}>
             <span className={styles.title}>{truncText(article.title, 40)}</span>
-            <button className={styles.like} onClick={() => dispatch(favorite(slug, token, article.favorited, 0, true))}>
+            <button
+              className={styles.like}
+              onClick={() => dispatch(favorite(slug, token, article.favorited, 0, true, history))}
+            >
               {article.favorited ? (
                 <HeartFilled
                   style={{
