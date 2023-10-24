@@ -203,6 +203,9 @@ export const deleteArticle = (slug, token, history) => {
 
 export const favorite = (slug, token, favorited, page = 1, full = null) => {
   return (dispatch) => {
+    if (!token) {
+      return;
+    }
     const method = favorited ? 'DELETE' : 'POST';
     fetch(`https://blog.kata.academy/api//articles/${slug}/favorite`, {
       method,
