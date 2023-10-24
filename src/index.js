@@ -39,7 +39,6 @@ const reducer = (state = inState, action) => {
     case 'GET_ARTICLE':
       return { ...state, loading: false, article: action.value };
     case 'AUTH': {
-      console.log(action.value);
       const image = action.value.image ? action.value.image : null;
       const email = action.value.email ? action.value.email : null;
       const username = action.value.username ? action.value.username : null;

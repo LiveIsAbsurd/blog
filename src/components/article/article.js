@@ -1,16 +1,21 @@
 import React from 'react';
 import { Avatar } from 'antd';
-import { HeartOutlined } from '@ant-design/icons';
+import { HeartFilled, HeartOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import dateForm from '../../function/dateForm';
 import tagRender from '../../function/tagRender';
 import truncText from '../../function/truncText';
+import { favorite } from '../../function/api';
 
 import styles from './article.module.sass';
 
 const Article = ({ item }) => {
-  const { slug, title, description, favoritesCount, tagList, author, createdAt } = item;
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.token);
+  const page = useSelector((state) => state.page);
+  const { slug, title, description, favoritesCount, favorited, tagList, author, createdAt } = item;
   return (
     <div className={styles.item}>
       <div className={styles.header}>
@@ -19,12 +24,22 @@ const Article = ({ item }) => {
             <Link to={`/article/${slug}`} className={styles.title}>
               {truncText(title, 40)}
             </Link>
-            <HeartOutlined
-              style={{
-                fontSize: '23px',
-                color: 'rgba(0, 0, 0, 0.5)',
-              }}
-            />
+            <button className={styles.like} onClick={() => dispatch(favorite(slug, token, favorited, (page - 1) * 20))}>
+              {favorited ? (
+                <HeartFilled
+                  style={{
+                    fontSize: '23px',
+                    color: '#FF0707',
+                  }}
+                />
+              ) : (
+                <HeartOutlined
+                  style={{
+                    fontSize: '23px',
+                  }}
+                />
+              )}
+            </button>
             <div className={styles.count}>{favoritesCount}</div>
           </div>
           {tagRender(tagList, styles)}

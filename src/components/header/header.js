@@ -8,12 +8,11 @@ import { logOut, clearArticle } from '../../function/actions';
 
 import styles from './header.module.sass';
 
-const Header = () => {
+const Header = ({ token }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const username = useSelector((state) => state.username);
   const image = useSelector((state) => state.image);
-  const token = useSelector((state) => state.token);
 
   useEffect(() => {
     if (token) {

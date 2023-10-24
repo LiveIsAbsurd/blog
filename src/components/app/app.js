@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getPosts } from '../../function/api';
 import { authentication } from '../../function/actions';
 import Header from '../header';
-import articlesRender from '../articlesRender/articlesRender';
+import ArticlesRender from '../articlesRender/articlesRender';
 import FullArticle from '../fullArticle';
 import SignUp from '../signUp';
 import SignIn from '../signIn';
@@ -18,22 +18,36 @@ import styles from './app.module.sass';
 const App = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
+  const page = useSelector((state) => state.page);
 
   useEffect(() => {
-    dispatch(getPosts(0));
     if (localStorage.getItem('token') !== null) {
       dispatch(authentication({ token: localStorage.getItem('token') }));
     }
-  }, []);
+    dispatch(getPosts(0, token));
+  }, [token]);
 
   return (
     <Router>
       <div>
-        <Header />
+        <Header token={token} />
         <div className={styles.main}>
           <Switch>
-            <Route exact path="/" component={articlesRender} />
-            <Route exact path="/articles" component={articlesRender} />
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return <ArticlesRender />;
+              }}
+            />
+            <Route
+              exact
+              path="/articles"
+              render={() => {
+                dispatch(getPosts((page - 1) * 20, token));
+                return <ArticlesRender />;
+              }}
+            />
             <Route
               path="/article/:slug"
               render={({ match }) => {
@@ -44,6 +58,13 @@ const App = () => {
             <Route path="/sign-in" component={SignIn} />
             <Route path="/profile" component={Profile} />
             <PrivateRouter path="/new-article" component={EditArticle} token={token} />
+            <Route
+              exact
+              path="/articles/:slug/edit"
+              render={({ match }) => {
+                return <EditArticle slug={match.params.slug} />;
+              }}
+            />
             <Redirect to="/articles" />
           </Switch>
         </div>

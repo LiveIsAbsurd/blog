@@ -1,19 +1,29 @@
 import { getPostAction, loading, getArticleAction, authentication } from './actions';
 
-export const getPosts = (offset) => {
+export const getPosts = (offset, token, reload) => {
   return async (dispatch) => {
-    dispatch(loading());
-    const response = await fetch(`https://blog.kata.academy/api/articles?offset=${offset}`);
+    if (reload) {
+      dispatch(loading());
+    }
+    const response = await fetch(`https://blog.kata.academy/api/articles?offset=${offset}`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
     const data = await response.json();
     const page = offset / 20;
     dispatch(getPostAction(data, page));
   };
 };
 
-export const getArticle = (slug) => {
+export const getArticle = (slug, token) => {
   return async (dispatch) => {
     dispatch(loading());
-    const response = await fetch(`https://blog.kata.academy/api/articles/${slug}`);
+    const response = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
     const data = await response.json();
     dispatch(getArticleAction(data.article));
   };
@@ -158,11 +168,11 @@ export const findUser = (token) => {
   };
 };
 
-export const createArticle = (data, token, history) => {
+export const createArticle = (data, token, history, slug) => {
   return (dispatch) => {
-    console.log(data, token);
-    fetch('https://blog.kata.academy/api/articles', {
-      method: 'POST',
+    const method = slug ? 'PUT' : 'POST';
+    fetch(`https://blog.kata.academy/api/articles/${slug ? slug : ''}`, {
+      method,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${token}`,
@@ -172,7 +182,41 @@ export const createArticle = (data, token, history) => {
       .then((response) => response.json())
       .then(() => {
         history.push('/articles');
-        dispatch(getPosts(0));
+        dispatch(getPosts(0, token, true));
+      });
+  };
+};
+
+export const deleteArticle = (slug, token, history) => {
+  return (dispatch) => {
+    fetch(`https://blog.kata.academy/api/articles/${slug}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    }).then(() => {
+      history.push('/articles');
+      dispatch(getPosts(0, token));
+    });
+  };
+};
+
+export const favorite = (slug, token, favorited, page = 1, full = null) => {
+  return (dispatch) => {
+    const method = favorited ? 'DELETE' : 'POST';
+    fetch(`https://blog.kata.academy/api//articles/${slug}/favorite`, {
+      method,
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then(() => {
+        if (!full) {
+          dispatch(getPosts(page, token));
+        } else {
+          dispatch(getArticle(slug, token));
+        }
       });
   };
 };

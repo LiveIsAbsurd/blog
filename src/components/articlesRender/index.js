@@ -1,3 +1,3 @@
-import articlesRender from './articlesRender';
+import ArticlesRender from './articlesRender';
 
-export default articlesRender;
+export default ArticlesRender;

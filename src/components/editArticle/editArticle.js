@@ -7,16 +7,22 @@ import { createArticle } from '../../function/api';
 
 import styles from './editArticle.module.sass';
 
-const EditArticle = () => {
+const EditArticle = ({ slug = null }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const token = useSelector((state) => state.token);
+  const article = useSelector((state) => state.article);
+  const articleTags = article
+    ? article.tagList.map((el) => {
+        return { text: el };
+      })
+    : [];
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState([...articleTags]);
 
   const deleteTag = (i) => {
     const newTags = [...tags];
@@ -86,13 +92,13 @@ const EditArticle = () => {
     if (!tagList.length) {
       delete article.article.tags;
     }
-    dispatch(createArticle(article, token, history));
+    dispatch(createArticle(article, token, history, slug));
   };
 
   return (
     <div className={styles.window}>
       <form onSubmit={handleSubmit((data) => onSubmit(data))}>
-        <span className={styles.header}>Create new article</span>
+        <span className={styles.header}>{slug ? 'Edit article' : 'Create new article'}</span>
 
         <div className={styles.container}>
           <span className={styles.inputHead}>Title</span>
@@ -103,6 +109,7 @@ const EditArticle = () => {
             placeholder="Title"
             type="text"
             style={errors.title ? { borderColor: 'red' } : null}
+            defaultValue={article ? article.title : null}
           ></input>
           {errors.title && <span className={styles.errorMessage}>{errors.title.message}</span>}
         </div>
@@ -113,6 +120,7 @@ const EditArticle = () => {
             {...register('desc', {
               required: 'Обязательное поле',
             })}
+            defaultValue={article ? article.description : null}
             placeholder="Title"
             type="text"
             style={errors.desc ? { borderColor: 'red' } : null}
@@ -126,6 +134,7 @@ const EditArticle = () => {
             {...register('text', {
               required: 'Обязательное поле',
             })}
+            defaultValue={article ? article.body : null}
             placeholder="Text"
             type="text"
             style={errors.text ? { borderColor: 'red' } : null}
