@@ -103,7 +103,6 @@ export const onAuth = (data, setError, history) => {
 };
 
 export const onUpdateProfile = (data, token, setError, history) => {
-  console.log(token);
   return (dispatch) => {
     const userData = {
       user: {
