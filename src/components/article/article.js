@@ -56,7 +56,7 @@ const Article = ({ item }) => {
           <Avatar size={46} className={styles.avatar} src={author.image} />
         </div>
       </div>
-      <div className={styles.text}>{truncText(description, 200)}</div>
+      <div className={styles.text}>{description ? truncText(description, 200) : null}</div>
     </div>
   );
 };
