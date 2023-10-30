@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Spin, Button, Popconfirm } from 'antd';
@@ -13,6 +13,8 @@ import truncText from '../../function/truncText';
 import styles from './fullArticle.module.sass';
 
 const FullArticle = ({ slug }) => {
+  const [click, setClick] = useState(false);
+  const [clickLike, setClickLIke] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
   const article = useSelector((state) => state.article);
@@ -23,6 +25,10 @@ const FullArticle = ({ slug }) => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => setClickLIke(() => false), 2000);
+  }, [clickLike]);
+
   let content = article ? (
     <div className={styles.item}>
       <div className={styles.header}>
@@ -31,7 +37,11 @@ const FullArticle = ({ slug }) => {
             <span className={styles.title}>{truncText(article.title, 40)}</span>
             <button
               className={styles.like}
-              onClick={() => dispatch(favorite(slug, token, article.favorited, 0, true, history))}
+              onClick={() => {
+                if (clickLike) return;
+                setClickLIke(() => true);
+                dispatch(favorite(slug, token, article.favorited, 0, true, history));
+              }}
             >
               {article.favorited ? (
                 <HeartFilled
@@ -68,7 +78,11 @@ const FullArticle = ({ slug }) => {
             <Popconfirm
               title="Delete the task"
               description="Are you sure to delete this task?"
-              onConfirm={() => dispatch(deleteArticle(slug, token, history))}
+              onConfirm={() => {
+                if (click) return;
+                setClick(() => true);
+                dispatch(deleteArticle(slug, token, history));
+              }}
               okText="Yes"
               cancelText="No"
             >

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar } from 'antd';
 import { HeartFilled, HeartOutlined } from '@ant-design/icons';
 import { Link, useHistory } from 'react-router-dom';
@@ -12,11 +12,15 @@ import { favorite } from '../../function/api';
 import styles from './article.module.sass';
 
 const Article = ({ item }) => {
+  const [clickLike, setClickLIke] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const page = useSelector((state) => state.page);
   const { slug, title, description, favoritesCount, favorited, tagList, author, createdAt } = item;
+  useEffect(() => {
+    setTimeout(() => setClickLIke(() => false), 2000);
+  }, [clickLike]);
   return (
     <div className={styles.item}>
       <div className={styles.header}>
@@ -27,7 +31,11 @@ const Article = ({ item }) => {
             </Link>
             <button
               className={styles.like}
-              onClick={() => dispatch(favorite(slug, token, favorited, (page - 1) * 20, false, history))}
+              onClick={() => {
+                if (clickLike) return;
+                setClickLIke(() => true);
+                dispatch(favorite(slug, token, favorited, (page - 1) * 20, false, history));
+              }}
             >
               {favorited ? (
                 <HeartFilled

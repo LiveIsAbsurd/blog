@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm, useWatch } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
@@ -8,6 +8,7 @@ import { onRegister } from '../../function/api';
 import styles from './signUp.module.sass';
 
 const SignUp = () => {
+  const [click, setClick] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
   const {
@@ -23,9 +24,15 @@ const SignUp = () => {
     name: 'password',
   });
 
+  const submit = (data) => {
+    if (click) return;
+    setClick(() => true);
+    dispatch(onRegister(data, setError, history));
+  };
+
   return (
     <div className={styles.window}>
-      <form onSubmit={handleSubmit((data) => dispatch(onRegister(data, setError, history)))}>
+      <form onSubmit={handleSubmit((data) => submit(data))}>
         <span className={styles.header}>Create New Account</span>
 
         <div className={styles.container}>
@@ -101,7 +108,7 @@ const SignUp = () => {
           <span style={errors.agree && { color: 'red' }}>I agree to the processing of my personal information</span>
         </label>
         <input
-          style={Object.keys(errors).length !== 0 ? { opacity: '0.5', cursor: 'unset' } : null}
+          style={Object.keys(errors).length !== 0 || click ? { opacity: '0.5', cursor: 'unset' } : null}
           className={styles.button}
           type="submit"
           value="Create"

@@ -185,7 +185,7 @@ export const findUser = (token) => {
 };
 
 export const createArticle = (data, token, history, slug) => {
-  return (dispatch) => {
+  return () => {
     const method = slug ? 'PUT' : 'POST';
     fetch(`https://blog.kata.academy/api/articles/${slug ? slug : ''}`, {
       method,
@@ -196,9 +196,8 @@ export const createArticle = (data, token, history, slug) => {
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
-      .then(() => {
-        history.push('/articles');
-        dispatch(getPosts(0, token, true));
+      .then((data) => {
+        history.push(`/article/${data.article.slug}`);
       })
       .catch(() => {
         history.push('/error');

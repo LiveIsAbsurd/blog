@@ -8,6 +8,7 @@ import { createArticle } from '../../function/api';
 import styles from './editArticle.module.sass';
 
 const EditArticle = ({ slug = null }) => {
+  const [click, setClick] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
   const token = useSelector((state) => state.token);
@@ -80,6 +81,8 @@ const EditArticle = ({ slug = null }) => {
   });
 
   const onSubmit = (data) => {
+    if (click) return;
+    setClick(() => true);
     const tagList = tags.map((el) => el.text);
     const article = {
       article: {
@@ -145,7 +148,9 @@ const EditArticle = ({ slug = null }) => {
 
         <span className={styles.inputHead}>Tags</span>
         {tagList.length == 0 ? <div>{but}</div> : tagList}
-        <button className={styles.send}>Send</button>
+        <button style={click ? { opacity: '0.4', cursor: 'unset' } : null} className={styles.send}>
+          Send
+        </button>
       </form>
     </div>
   );

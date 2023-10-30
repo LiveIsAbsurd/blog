@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar } from 'antd';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import { logOut, clearArticle } from '../../function/actions';
 import styles from './header.module.sass';
 
 const Header = ({ token }) => {
+  const [click, setClick] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
   const username = useSelector((state) => state.username);
@@ -19,6 +20,8 @@ const Header = ({ token }) => {
       dispatch(findUser(token));
     }
   }, [token]);
+
+  useEffect(() => setClick(() => false));
   const nonAuth = (
     <React.Fragment>
       <Link to="/articles" className={styles.linkHead} onClick={() => dispatch(clearArticle())}>
@@ -48,9 +51,12 @@ const Header = ({ token }) => {
           <Avatar size={46} className={styles.avatar} src={image} />
         </Link>
         <button
+          style={click ? { opacity: '0.4', cursor: 'unset' } : null}
           to="/sign-in"
           className={`${styles.logOut} ${styles.link}`}
           onClick={() => {
+            if (click) return;
+            setClick(() => true);
             dispatch(logOut());
             history.push('/sign-in');
           }}

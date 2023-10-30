@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
@@ -9,6 +9,7 @@ import { onAuth } from '../../function/api';
 import styles from './signIn.module.sass';
 
 const SignIn = () => {
+  const [click, setClick] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
   const {
@@ -25,9 +26,15 @@ const SignIn = () => {
     return true;
   };
 
+  const submit = (data) => {
+    if (click) return;
+    setClick(() => true);
+    dispatch(onAuth(data, setError, history));
+  };
+
   return (
     <div className={styles.window}>
-      <form onSubmit={handleSubmit((data) => dispatch(onAuth(data, setError, history)))}>
+      <form onSubmit={handleSubmit((data) => submit(data))}>
         <span className={styles.header}>Sign In</span>
 
         <div className={styles.container}>
@@ -57,7 +64,7 @@ const SignIn = () => {
           {errors.password && <span className={styles.errorMessage}>{errors.password.message}</span>}
         </div>
         <input
-          style={Object.keys(errors).length !== 0 ? { opacity: '0.5', cursor: 'unset' } : null}
+          style={Object.keys(errors).length !== 0 || click ? { opacity: '0.5', cursor: 'unset' } : null}
           className={styles.button}
           type="submit"
           value="Log in"
