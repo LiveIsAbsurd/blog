@@ -26,8 +26,8 @@ const EditArticle = ({ slug = null }) => {
   const [tags, setTags] = useState([...articleTags]);
 
   useEffect(() => {
-    setClick(() => false);
-  }, [errors]);
+    setTimeout(() => setClick(() => false), 5000);
+  }, [click]);
 
   const deleteTag = (i) => {
     const newTags = [...tags];

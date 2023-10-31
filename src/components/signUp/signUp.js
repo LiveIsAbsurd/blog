@@ -20,8 +20,8 @@ const SignUp = () => {
   } = useForm();
 
   useEffect(() => {
-    setClick(() => false);
-  }, [errors]);
+    setTimeout(() => setClick(() => false), 7000);
+  }, [click]);
 
   const password = useWatch({
     control,

@@ -20,12 +20,12 @@ const App = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const page = useSelector((state) => state.page);
+  // const loading = useSelector((state) => state.loading);
 
   useEffect(() => {
-    if (localStorage.getItem('token') !== null) {
+    if (localStorage.getItem('token') !== null && !token) {
       dispatch(authentication({ token: localStorage.getItem('token') }));
     }
-    dispatch(getPosts(0, token));
   }, [token]);
 
   return (
@@ -38,6 +38,7 @@ const App = () => {
               exact
               path="/"
               render={() => {
+                dispatch(getPosts(0, token));
                 return <ArticlesRender />;
               }}
             />

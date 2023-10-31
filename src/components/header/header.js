@@ -16,7 +16,7 @@ const Header = ({ token }) => {
   const image = useSelector((state) => state.image);
 
   useEffect(() => {
-    if (token) {
+    if (token && !username) {
       dispatch(findUser(token));
     }
   }, [token]);

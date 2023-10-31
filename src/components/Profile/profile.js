@@ -22,8 +22,8 @@ const Profile = () => {
   } = useForm();
 
   useEffect(() => {
-    setClick(() => false);
-  }, [errors]);
+    setTimeout(() => setClick(() => false), 7000);
+  }, [click]);
 
   const submit = (data) => {
     if (click) return;
@@ -97,7 +97,12 @@ const Profile = () => {
           ></input>
           {errors.image && <span className={styles.errorMessage}>{errors.image.message}</span>}
         </div>
-        <input type="submit" value="save" className={styles.button} />
+        <input
+          style={Object.keys(errors).length !== 0 || click ? { opacity: '0.5', cursor: 'unset' } : null}
+          type="submit"
+          value="save"
+          className={styles.button}
+        />
       </form>
     </div>
   );

@@ -10,7 +10,7 @@ const inState = {
   posts: [],
   pageCount: 0,
   page: 1,
-  loading: true,
+  loading: false,
   error: false,
   article: null,
   token: null,
@@ -50,7 +50,14 @@ const reducer = (state = inState, action) => {
       const email = action.value.email ? action.value.email : null;
       const username = action.value.username ? action.value.username : null;
       localStorage.setItem('token', action.value.token);
-      return { ...state, error: false, token: action.value.token, username: username, image: image, email: email };
+      return {
+        ...state,
+        error: false,
+        token: action.value.token,
+        username: username,
+        image: image,
+        email: email,
+      };
     }
     case 'LOG_OUT':
       localStorage.clear();
