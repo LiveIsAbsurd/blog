@@ -10,7 +10,7 @@ const inState = {
   posts: [],
   pageCount: 0,
   page: 1,
-  loading: false,
+  loading: true,
   error: false,
   article: null,
   token: null,
