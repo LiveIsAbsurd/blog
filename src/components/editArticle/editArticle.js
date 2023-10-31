@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -24,6 +24,10 @@ const EditArticle = ({ slug = null }) => {
     handleSubmit,
   } = useForm();
   const [tags, setTags] = useState([...articleTags]);
+
+  useEffect(() => {
+    setClick(() => false);
+  }, [errors]);
 
   const deleteTag = (i) => {
     const newTags = [...tags];
@@ -148,7 +152,10 @@ const EditArticle = ({ slug = null }) => {
 
         <span className={styles.inputHead}>Tags</span>
         {tagList.length == 0 ? <div>{but}</div> : tagList}
-        <button style={click ? { opacity: '0.4', cursor: 'unset' } : null} className={styles.send}>
+        <button
+          style={Object.keys(errors).length !== 0 || click ? { opacity: '0.4', cursor: 'unset' } : null}
+          className={styles.send}
+        >
           Send
         </button>
       </form>

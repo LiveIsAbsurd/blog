@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
@@ -18,6 +18,10 @@ const SignIn = () => {
     formState: { errors },
     setError,
   } = useForm();
+
+  useEffect(() => {
+    setClick(() => false);
+  }, [errors]);
 
   const validateEmail = (value) => {
     if (!validator.isEmail(value)) {

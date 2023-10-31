@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -20,6 +20,10 @@ const Profile = () => {
     formState: { errors },
     setError,
   } = useForm();
+
+  useEffect(() => {
+    setClick(() => false);
+  }, [errors]);
 
   const submit = (data) => {
     if (click) return;

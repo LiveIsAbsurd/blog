@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm, useWatch } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
@@ -18,6 +18,10 @@ const SignUp = () => {
     control,
     setError,
   } = useForm();
+
+  useEffect(() => {
+    setClick(() => false);
+  }, [errors]);
 
   const password = useWatch({
     control,
